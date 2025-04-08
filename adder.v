@@ -3,6 +3,8 @@
 // an eight-bit full adder, and a thirty-two-bit full adder using Verilog.
 // adder.v
 
+`include "definitions.v"
+
 module half_adder
 (
     input wire a,
@@ -161,4 +163,11 @@ module thirty_two_bit_full_adder
         .carry_out(carry_out)
     );
 
+endmodule
+
+module parameterized_adder (in_1, in_2, out);
+    input wire [`WORD_SIZE-1:0] in_1, in_2;
+    output wire [`WORD_SIZE-1:0] out;
+
+    assign out = in_1 + in_2; // Simple addition
 endmodule
