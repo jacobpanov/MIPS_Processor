@@ -1,30 +1,30 @@
 // Jacob Panov
 // This module implements a half adder, a one-bit full adder, a four-bit full adder,
-// an eight-bit full adder, and a thirty-two-bit full adder using Verilog.
-// adder.v
+// an eight-bit full adder, and a thirty-two-bit full adder using SystemVerilog.
+// adder.sv
 
 `include "definitions.v"
 
-module half_adder
-(
-    input wire a,
-    input wire b,
-    output wire sum,
-    output wire carry
+// Half Adder
+module half_adder (
+    input logic a,
+    input logic b,
+    output logic sum,
+    output logic carry
 );
     assign sum = a ^ b; // Sum is the XOR of a and b
     assign carry = a & b; // Carry is the AND of a and b
 endmodule
 
-module one_bit_full_adder
-(
-    input wire a,
-    input wire b,
-    input wire carry_in,
-    output wire sum,
-    output wire carry_out
+// One-Bit Full Adder
+module one_bit_full_adder (
+    input logic a,
+    input logic b,
+    input logic carry_in,
+    output logic sum,
+    output logic carry_out
 );
-    wire sum_half, carry_half1, carry_half2;
+    logic sum_half, carry_half1, carry_half2;
 
     // First half adder
     half_adder ha1 (
@@ -44,18 +44,17 @@ module one_bit_full_adder
 
     // Final carry out
     assign carry_out = carry_half1 | carry_half2; // OR of the two carries
-
 endmodule
 
-module four_bit_full_adder
-(
-    input wire [3:0] a,
-    input wire [3:0] b,
-    input wire carry_in,
-    output wire [3:0] sum,
-    output wire carry_out
+// Four-Bit Full Adder
+module four_bit_full_adder (
+    input logic [3:0] a,
+    input logic [3:0] b,
+    input logic carry_in,
+    output logic [3:0] sum,
+    output logic carry_out
 );
-    wire c1, c2, c3;
+    logic c1, c2, c3;
 
     // Instantiate four one-bit full adders
     one_bit_full_adder f1 (
@@ -89,18 +88,17 @@ module four_bit_full_adder
         .sum(sum[3]),
         .carry_out(carry_out)
     );
+endmodule
 
-endmodule   
-
-module eight_bit_full_adder
-(
-    input wire [7:0] a,
-    input wire [7:0] b,
-    input wire carry_in,
-    output wire [7:0] sum,
-    output wire carry_out
+// Eight-Bit Full Adder
+module eight_bit_full_adder (
+    input logic [7:0] a,
+    input logic [7:0] b,
+    input logic carry_in,
+    output logic [7:0] sum,
+    output logic carry_out
 );
-    wire c1, c2, c3, c4;
+    logic c1;
 
     // Instantiate two four-bit full adders
     four_bit_full_adder f1 (
@@ -120,15 +118,15 @@ module eight_bit_full_adder
     );
 endmodule
 
-module thirty_two_bit_full_adder
-(
-    input wire [31:0] a,
-    input wire [31:0] b,
-    input wire carry_in,
-    output wire [31:0] sum,
-    output wire carry_out
+// Thirty-Two-Bit Full Adder
+module thirty_two_bit_full_adder (
+    input logic [31:0] a,
+    input logic [31:0] b,
+    input logic carry_in,
+    output logic [31:0] sum,
+    output logic carry_out
 );
-    wire c1, c2, c3, c4;
+    logic c1, c2, c3;
 
     // Instantiate four eight-bit full adders
     eight_bit_full_adder f1 (
@@ -162,12 +160,13 @@ module thirty_two_bit_full_adder
         .sum(sum[31:24]),
         .carry_out(carry_out)
     );
-
 endmodule
 
-module parameterized_adder (in_1, in_2, out);
-    input wire [`WORD_SIZE-1:0] in_1, in_2;
-    output wire [`WORD_SIZE-1:0] out;
-
+// Parameterized Adder
+module parameterized_adder (
+    input logic [`WORD_SIZE-1:0] in_1,
+    input logic [`WORD_SIZE-1:0] in_2,
+    output logic [`WORD_SIZE-1:0] out
+);
     assign out = in_1 + in_2; // Simple addition
 endmodule

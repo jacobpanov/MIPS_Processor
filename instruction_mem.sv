@@ -1,5 +1,8 @@
 // Jacob Panov
 // This module implements an instruction memory for a MIPS processor.
+// instruction_mem.sv
+
+// The memory is initialized with instructions from a file.
 
 `include "definitions.v"
 
