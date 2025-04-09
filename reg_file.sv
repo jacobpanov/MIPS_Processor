@@ -2,7 +2,7 @@
 // This module implements a register file for a MIPS processor with read and write functionality.
 // reg_file.sv
 
-`include "defines.sv"
+`include "definitions.sv"
 
 module reg_file #(
     parameter REG_FILE_SIZE = 32, // Number of registers
@@ -22,13 +22,13 @@ module reg_file #(
     integer i;
 
     // Reset or write logic
-    always_ff @(negedge clk) begin
+    always_ff @(posedge clk) begin
         if (rst) begin
             // Reset all registers to 0
             for (i = 0; i < REG_FILE_SIZE; i = i + 1) begin
                 reg_mem[i] <= 0;
             end
-        end else if (write_en) begin
+        end else if (write_en && dest != 0) begin
             // Write value to the destination register
             reg_mem[dest] <= write_val;
         end
