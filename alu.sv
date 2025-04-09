@@ -2,31 +2,27 @@
 // This module implements a 32-bit ALU (Arithmetic Logic Unit) with various operations.
 // alu.sv
 
-`include "definitions.v"
-
 module alu (
-    input logic [`WORD_SIZE-1:0] in_1, // 32-bit input 1
-    input logic [`WORD_SIZE-1:0] in_2, // 32-bit input 2
-    input logic [3:0] alu_op,          // ALU operation code
-    output logic [`WORD_SIZE-1:0] out, // 32-bit output
-    output logic zero                  // Zero flag
+    input logic [31:0] a, // ALU input 1
+    input logic [31:0] b, // ALU input 2
+    input logic [2:0] alucontrol, // ALU control signal (3 bits)
+    input logic [4:0] shamt, // Shift amount for shift operations
+    output logic [31:0] y, // ALU output
+    output logic zero // Zero flag
 );
-
     always_comb begin
-        case (alu_op)
-            `ALU_ADD: out = in_1 + in_2;
-            `ALU_SUB: out = in_1 - in_2;
-            `ALU_AND: out = in_1 & in_2;
-            `ALU_OR:  out = in_1 | in_2;
-            `ALU_NOR: out = ~(in_1 | in_2);
-            `ALU_XOR: out = in_1 ^ in_2;
-            `ALU_SLA: out = in_1 <<< 1; // Shift left arithmetic
-            `ALU_SLL: out = in_1 << 1;  // Shift left logical
-            `ALU_SRA: out = in_1 >>> 1; // Shift right arithmetic
-            `ALU_SRL: out = in_1 >> 1;  // Shift right logical
-            default:  out = {`WORD_SIZE{1'bx}}; // Undefined operation
+        case (alucontrol)
+            3'b000: y = a & b; // AND
+            3'b001: y = a | b; // OR
+            3'b010: y = a + b; // ADD
+            3'b110: y = a - b; // SUB
+            3'b111: y = (a < b) ? 32'b1 : 32'b0; // SLT
+            3'b100: y = b << shamt; // SLL
+            3'b101: y = b >> shamt; // SRL
+            default: y = 32'bx; // Undefined operation
         endcase
 
-        zero = (out == 0); // Set zero flag if output is zero
+        // Set zero flag if output is zero
+        zero = (y == 0);
     end
 endmodule
