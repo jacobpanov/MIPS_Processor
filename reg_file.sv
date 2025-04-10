@@ -23,7 +23,7 @@ module reg_file #(
 
     // Reset or write logic
     always_ff @(posedge clk) begin
-        if (rst) begin
+        if (reset) begin
             // Reset all registers to 0
             for (i = 0; i < REG_FILE_SIZE; i = i + 1) begin
                 reg_mem[i] <= 0;
