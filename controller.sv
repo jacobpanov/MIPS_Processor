@@ -38,7 +38,7 @@ module controller (
         .reg_write(reg_write_decode),
         .jump(jump_decode),
         .alu_op(alu_op_decode),
-        .branch_not_equal(branch_not_equal_decode),
+        .branch_ne(branch_not_equal_decode),
         .jump_pc(jump_pc_decode)
     );
 
@@ -57,26 +57,26 @@ module controller (
     assign write_or_byte = mem_to_reg_memory[0] & mem_to_reg_memory[1];
 
     // Execute stage pipeline register
-    floprc #(10) reg_execute (
+    flop_rc #(10) reg_execute (
         .clk(clk),
-        .reset(reset),
+        .rst(reset),
         .clear(flush_execute),
         .d({mem_to_reg_decode, mem_write_decode, alu_src_decode, reg_dst_decode, reg_write_decode, alu_control_decode}),
         .q({mem_to_reg_execute, mem_write_execute, alu_src_execute, reg_dst_execute, reg_write_execute, alu_control_execute})
     );
 
     // Memory stage pipeline register
-    flopr #(6) reg_memory (
+    flop_r #(6) reg_memory (
         .clk(clk),
-        .reset(reset),
+        .rst(reset),
         .d({mem_to_reg_execute, mem_write_execute, reg_write_execute, reg_dst_execute}),
         .q({mem_to_reg_memory, mem_write_memory, reg_write_memory, reg_dst_memory})
     );
 
     // Write-back stage pipeline register
-    flopr #(5) reg_writeback (
+    flop_r #(5) reg_writeback (
         .clk(clk),
-        .reset(reset),
+        .rst(reset),
         .d({mem_to_reg_memory, reg_write_memory, reg_dst_memory}),
         .q({mem_to_reg_writeback, reg_write_writeback, reg_dst_writeback})
     );

@@ -9,7 +9,7 @@ module reg_file #(
     parameter REG_FILE_ADDR_LEN = 5 // Address width for register file
 ) (
     input logic clk, // Clock signal
-    input logic rst, // Reset signal
+    input logic reset, // Reset signal
     input logic write_en, // Write enable signal
     input logic [REG_FILE_ADDR_LEN-1:0] src1, // Source register 1 address
     input logic [REG_FILE_ADDR_LEN-1:0] src2, // Source register 2 address

@@ -41,6 +41,7 @@ module data_path (
     logic [31:0] hilo_execute, hilo_memory, hilo_writeback; // HI/LO register values
     logic [31:0] jump_address; // Jump address
     logic [31:0] alu_or_jal_writeback; // ALU or JAL result
+    logic zero_flag; // Zero flag from ALU
 
     //---------------------------Hazard Unit---------------------------------------------------------
     hazard_unit hazard_unit_inst (
@@ -86,7 +87,8 @@ module data_path (
     // Register file
     reg_file reg_file_inst (
         .clk(clk),
-        .reg_write(reg_write_writeback),
+        .reset(reset),
+        .write_en(reg_write_writeback),
         .src1(rs_decode),
         .src2(rt_decode),
         .dest(write_reg_writeback),
@@ -189,7 +191,7 @@ module data_path (
 
     // ALU Logic
     mux2 #(32) src_b_mux (.a(src_b_forwarded_execute), .b(sign_imm_execute), .sel(alu_src_execute), .y(src_b_muxed_execute));
-    alu alu_inst (.a(src_a_forwarded_execute), .b(src_b_muxed_execute), .alucontrol(alu_control_execute), .y(alu_out_execute), .shamt(shamt_execute));
+    alu alu_inst (.a(src_a_forwarded_execute), .b(src_b_muxed_execute), .alucontrol(alu_control_execute), .y(alu_out_execute), .shamt(shamt_execute), .zero(zero_flag));
     coprocessor coprocessor_inst (.src_a(src_a_forwarded_execute), .src_b(src_b_forwarded_execute), .funct_decode(funct_execute), .hilo(hilo_execute));
     mux3 #(5) write_reg_mux (.a(rt_execute), .b(rd_execute), .c(5'b11111), .sel(reg_dst_execute), .y(write_reg_execute));
 
