@@ -2,7 +2,7 @@
 // This module implements the coprocessor for a pipelined MIPS processor.
 // coprocessor.sv
 
-`include "definitions.v"
+`include "definitions.sv"
 
 module coprocessor (
     input logic [31:0] src_a, src_b, // Source operands (rs -> src_a, rt -> src_b)

@@ -16,7 +16,7 @@ module instruction_mem #(
 );
     localparam ADDR_WIDTH = $clog2(`MEMORY_SIZE); // Address width based on memory size
     logic [ADDR_WIDTH-1:0] address; // Effective address
-    logic [BYTE_SIZE-1:0] instMem [0:`MEMORY_SIZE-1]; // Instruction memory array
+    logic [`BYTE_SIZE-1:0] instMem [0:`MEMORY_SIZE-1]; // Instruction memory array
 
     // Preload instructions from a file
     initial begin
@@ -35,7 +35,7 @@ module instruction_mem #(
     // Optional: Display instruction memory contents for debugging
     initial begin
         integer i;
-        for (i = 0; i < MEMORY_SIZE; i = i + 1) begin
+        for (i = 0; i < `MEMORY_SIZE; i = i + 1) begin
             $display("Instruction Memory[%0d]: %h", i, instMem[i]);
         end
     end
@@ -44,7 +44,7 @@ module instruction_mem #(
     assign address = addr[ADDR_WIDTH-1:0];
 
     // Concatenate four memory cells to form a 32-bit instruction
-    assign instruction = (address + 3 < MEMORY_SIZE) ?
+    assign instruction = (address + 3 < `MEMORY_SIZE) ?
         {instMem[address], instMem[address + 1], instMem[address + 2], instMem[address + 3]} :
         32'b0; // Return 0 if out of bounds
 
