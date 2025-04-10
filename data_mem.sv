@@ -2,7 +2,7 @@
 // This module implements a data memory for a MIPS processor with read and write functionality.
 // data_mem.sv
 
-`include "definitons.sv"
+`include "definitions.sv"
 
 module data_mem #(
     parameter MEM_CELL_SIZE = 8, // Width of each memory cell
